@@ -1,0 +1,21 @@
+{
+  "name": "arcaa",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "compile": "node scripts/compile.mjs",
+    "test": "node --test test/*.test.mjs",
+    "deploy:arc": "node scripts/deploy-arc.mjs",
+    "dev": "vite --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2",
+    "ethers": "^6.11.1"
+  },
+  "devDependencies": {
+    "ganache": "^7.9.2",
+    "solc": "^0.8.26",
+    "vite": "^5.4.19"
+  }
+}

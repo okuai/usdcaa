@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arc USDC AA Payment</title>
+  </head>
+  <body data-mode="create">
+    <div id="app">
+      <header class="app-header">
+        <div>
+          <h1 data-i18n="appTitle">USDC AA Payment</h1>
+        </div>
+        <div class="wallet-area">
+          <select id="languageSelect" class="language-select" aria-label="Language">
+            <option value="en">English</option>
+            <option value="zh-Hant">繁體中文</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+          </select>
+          <span id="networkBadge" class="badge">Not connected</span>
+          <button id="connectWallet" type="button">Connect wallet</button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section id="createPanel" class="panel">
+          <div class="section-title">
+            <h2 data-i18n="createPaymentTitle">Create Payment</h2>
+            <span class="muted" data-i18n="receiverDefault">Receiver defaults to wallet address</span>
+          </div>
+
+          <label data-i18n-label="receiverAddress">
+            <span data-i18n="receiverAddress">Receiver address</span>
+            <input id="receiverAddress" placeholder="0x..." autocomplete="off" />
+          </label>
+
+          <div class="form-grid">
+            <label data-i18n-label="payerCount">
+              <span data-i18n="payerCount">Payers</span>
+              <input id="payerCount" type="number" min="1" max="50" step="1" value="1" />
+            </label>
+            <label data-i18n-label="totalAmountUsdc">
+              <span data-i18n="totalAmountUsdc">Total USDC</span>
+              <input id="totalAmount" type="number" min="0" step="0.000001" value="1" />
+            </label>
+          </div>
+
+          <label data-i18n-label="paymentLinkAmount">
+            <span data-i18n="paymentLinkAmount">Payment amount</span>
+            <input id="calculatedAmount" readonly />
+          </label>
+
+          <div class="actions">
+            <button id="createPayment" type="button" class="primary" data-i18n="createPaymentButton">Create payment</button>
+          </div>
+
+          <div id="paymentLinkBox" class="payment-link-box" hidden>
+            <div class="link-meta">
+              <span data-i18n="connectedAddress">Connected address</span>
+              <strong id="connectedAddressText">-</strong>
+            </div>
+            <label data-i18n-label="paymentLink">
+              <span data-i18n="paymentLink">Payment link</span>
+              <input id="paymentLink" readonly />
+            </label>
+            <div class="actions">
+              <button id="copyPaymentLink" type="button" data-i18n="copyPaymentLink">Copy link</button>
+              <a id="openPaymentLink" class="button-link" target="_blank" rel="noreferrer" data-i18n="openPaymentLink">Open link</a>
+            </div>
+          </div>
+        </section>
+
+        <section id="payPanel" class="panel">
+          <div class="section-title">
+            <h2 data-i18n="queryPayTitle">Status / Pay</h2>
+            <span class="muted" data-i18n="rpcHint">Status is read from chain by RPC</span>
+          </div>
+
+          <label id="queryGroupLabel">
+            <span id="queryGroupLabelText">Id</span>
+            <input id="queryGroupId" placeholder="0x..." autocomplete="off" />
+          </label>
+
+          <div class="actions">
+            <button id="queryPayment" type="button" data-i18n="queryStatus">Refresh status</button>
+            <button id="payPayment" type="button" class="primary" data-i18n="pay">pay</button>
+          </div>
+
+          <dl class="status-grid">
+            <div>
+              <dt data-i18n="status">Status</dt>
+              <dd id="paymentStatus">-</dd>
+            </div>
+            <div>
+              <dt data-i18n="totalAmount">Total amount</dt>
+              <dd id="paymentAmount">-</dd>
+            </div>
+            <div class="receiver-status-row" hidden>
+              <dt data-i18n="receiverAddress">Receiver address</dt>
+              <dd id="paymentReceiver">-</dd>
+            </div>
+            <div>
+              <dt data-i18n="paidCount">Paid</dt>
+              <dd id="paymentPayer">-</dd>
+            </div>
+            <div>
+              <dt data-i18n="receivedAmount">Received</dt>
+              <dd id="paymentPaidAt">-</dd>
+            </div>
+          </dl>
+
+          <div id="payerRows" class="payment-rows"></div>
+          <div id="txLinks" class="tx-links"></div>
+        </section>
+      </main>
+
+      <aside id="messageLog" class="message-log" aria-live="polite"></aside>
+    </div>
+    <script type="module" src="/src/web-app.mjs"></script>
+  </body>
+</html>
