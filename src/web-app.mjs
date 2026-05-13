@@ -101,7 +101,9 @@ const translations = {
     copyUnsupported: "This browser cannot copy automatically. Select and copy the payment link manually",
     linkCopied: "Payment link copied",
     linkLoaded: "Payment link loaded. Connect wallet to pay",
-    initialMessage: "Connect wallet to autofill receiver address"
+    initialMessage: "Connect wallet to autofill receiver address",
+    footerDocs: "Documentation",
+    footerGithub: "GitHub"
   },
   "zh-Hant": {
     appTitle: "USDC AA收款",
@@ -168,7 +170,9 @@ const translations = {
     copyUnsupported: "目前瀏覽器不支援自動複製，請手動選中付款連結複製",
     linkCopied: "付款連結已複製",
     linkLoaded: "已載入付款連結，連接錢包後可付款",
-    initialMessage: "連接錢包後會預設填入收款地址"
+    initialMessage: "連接錢包後會預設填入收款地址",
+    footerDocs: "文件",
+    footerGithub: "GitHub"
   },
   ja: {
     appTitle: "USDC AA 受取",
@@ -235,7 +239,9 @@ const translations = {
     copyUnsupported: "このブラウザは自動コピーに対応していません。支払いリンクを手動で選択してコピーしてください",
     linkCopied: "支払いリンクをコピーしました",
     linkLoaded: "支払いリンクを読み込みました。ウォレット接続後に支払えます",
-    initialMessage: "ウォレット接続後、受取アドレスが自動入力されます"
+    initialMessage: "ウォレット接続後、受取アドレスが自動入力されます",
+    footerDocs: "ドキュメント",
+    footerGithub: "GitHub"
   },
   ko: {
     appTitle: "USDC AA 수금",
@@ -302,7 +308,9 @@ const translations = {
     copyUnsupported: "현재 브라우저는 자동 복사를 지원하지 않습니다. 결제 링크를 직접 선택해 복사하세요",
     linkCopied: "결제 링크가 복사되었습니다",
     linkLoaded: "결제 링크를 불러왔습니다. 지갑 연결 후 결제할 수 있습니다",
-    initialMessage: "지갑을 연결하면 수금 주소가 자동 입력됩니다"
+    initialMessage: "지갑을 연결하면 수금 주소가 자동 입력됩니다",
+    footerDocs: "문서",
+    footerGithub: "GitHub"
   }
 };
 

@@ -442,6 +442,68 @@ dd {
   font-weight: 900;
 }
 
+.app-footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.footer-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 2px solid #10172f;
+  border-radius: 8px;
+  background: rgb(255 252 235 / 88%);
+  color: #10172f;
+  box-shadow: 0 4px 0 #10172f;
+  padding: 0;
+  text-decoration: none;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease;
+}
+
+.footer-link:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 0 #10172f;
+}
+
+.footer-link:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #10172f;
+}
+
+.footer-link-strong {
+  background: #10172f;
+  color: #fff36b;
+}
+
+.footer-link-strong:hover {
+  background: #1d2a53;
+}
+
+.footer-icon {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.footer-link-strong .footer-icon {
+  fill: currentColor;
+  stroke: none;
+}
+
 .message-log {
   position: fixed;
   right: 18px;
@@ -543,6 +605,14 @@ body[data-mode="pay"] .workspace {
   .language-select {
     flex: 1 1 130px;
     min-width: 0;
+  }
+
+  .app-footer {
+    margin-top: 22px;
+  }
+
+  .footer-link {
+    flex: 0 0 42px;
   }
 
   .status-grid div {
