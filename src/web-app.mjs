@@ -370,6 +370,23 @@ function syncWalletControlsText() {
   elements.networkBadge.textContent = signer ? ARC_TESTNET.chainName : t("notConnected");
 }
 
+function isActionLocked(element) {
+  return element.dataset.actionLocked === "true";
+}
+
+function setActionLocked(element, locked) {
+  if (locked) {
+    element.dataset.actionLocked = "true";
+    element.disabled = true;
+    return;
+  }
+
+  delete element.dataset.actionLocked;
+  if (element.getAttribute("aria-busy") !== "true") {
+    element.disabled = false;
+  }
+}
+
 function syncQueryLabel() {
   const showsReceiver = document.body.dataset.mode === "pay" && elements.queryGroupId.readOnly;
   elements.queryGroupLabelText.textContent = showsReceiver ? t("receiverAddress") : t("id");
@@ -476,6 +493,7 @@ function setConnectedUi(address) {
   elements.networkBadge.classList.add("connected");
   syncWalletControlsText();
   elements.connectedAddressText.textContent = address;
+  syncPayButtonState();
 
   if (!elements.receiverAddress.value.trim()) {
     elements.receiverAddress.value = address;
@@ -518,6 +536,25 @@ function statusText(status) {
   if (status === GroupStatus.Completed) return t("statusCompleted");
   if (status === GroupStatus.Cancelled) return t("statusCancelled");
   return t("statusMissing");
+}
+
+function hasConnectedWalletPaid(details) {
+  if (!connectedAddress) return false;
+  const payerAddress = connectedAddress.toLowerCase();
+  return details.payers.some((payer, index) => (
+    payer.toLowerCase() === payerAddress && Boolean(details.payments[index]?.paid)
+  ));
+}
+
+function syncPayButtonState(details = latestGroupDetails) {
+  if (!details) {
+    setActionLocked(elements.payPayment, false);
+    return;
+  }
+
+  const shouldLockPayButton = details.group.status !== GroupStatus.Created
+    || hasConnectedWalletPaid(details);
+  setActionLocked(elements.payPayment, shouldLockPayButton);
 }
 
 function formatAddress(address) {
@@ -639,6 +676,7 @@ function disconnectWallet() {
   elements.networkBadge.classList.remove("connected");
   syncWalletControlsText();
   elements.connectedAddressText.textContent = "-";
+  syncPayButtonState();
   setMessageKey("disconnected", {}, "success");
 }
 
@@ -846,6 +884,7 @@ function renderGroupDetails(details) {
 
   syncQueryLabel();
   renderPayerRows(payers, payments);
+  syncPayButtonState(details);
 }
 
 async function queryGroup(groupId = elements.queryGroupId.value.trim()) {
@@ -950,14 +989,19 @@ async function hydrateFromUrl() {
 
 function bindAction(element, handler) {
   element.addEventListener("click", async () => {
+    const previousMinWidth = element.style.minWidth;
+    element.style.minWidth = `${element.offsetWidth}px`;
     element.disabled = true;
+    element.setAttribute("aria-busy", "true");
     try {
       await handler();
     } catch (error) {
       console.error(error);
       setMessage(readableError(error), "error");
     } finally {
-      element.disabled = false;
+      element.removeAttribute("aria-busy");
+      element.disabled = isActionLocked(element);
+      element.style.minWidth = previousMinWidth;
     }
   });
 }

@@ -37,9 +37,11 @@ select,
 
 button,
 .button-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   min-height: 46px;
   border: 2px solid #10172f;
   border-radius: 8px;
@@ -63,16 +65,46 @@ button:hover,
   box-shadow: 0 5px 0 #10172f;
 }
 
+button:disabled:hover {
+  background: #fffceb;
+  box-shadow: 0 3px 0 #10172f;
+  transform: none;
+}
+
 button:active,
 .button-link:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 #10172f;
 }
 
+button:disabled:active {
+  box-shadow: 0 3px 0 #10172f;
+  transform: none;
+}
+
 button:disabled {
-  cursor: wait;
+  cursor: not-allowed;
   opacity: 0.64;
   transform: none;
+}
+
+button[aria-busy="true"] {
+  cursor: wait;
+}
+
+button[aria-busy="true"]::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  animation: button-loading-spin 700ms linear infinite;
+}
+
+button.primary:disabled:hover {
+  background: #1226ff;
 }
 
 button.primary {
@@ -83,6 +115,12 @@ button.primary {
 
 button.primary:hover {
   background: #071bd6;
+}
+
+@keyframes button-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 #app {
