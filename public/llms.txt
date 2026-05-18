@@ -1,0 +1,38 @@
+# USDC AA Payment
+
+> Non-custodial Arc Testnet USDC group payment links for EOA and AA wallet receivers.
+
+USDC AA Payment lets a receiver create one payment link for a group payment. Each payer opens the same link, connects a Web3 wallet, approves USDC when needed, and pays an equal share on-chain. The PaymentManager contract records payment state but does not custody user funds.
+
+## Primary Links
+
+- App: https://usdcaa.com/
+- Sitemap: https://usdcaa.com/sitemap.xml
+- Full LLM context: https://usdcaa.com/llms-full.txt
+- Source code: https://github.com/okuai/usdcaa
+- Documentation: https://github.com/okuai/usdcaa/blob/main/README.md
+
+## Key Facts
+
+- Network: Arc Testnet
+- Chain ID: 5042002
+- RPC: https://rpc.testnet.arc.network
+- Explorer: https://testnet.arcscan.app
+- USDC token: 0x3600000000000000000000000000000000000000
+- PaymentManager: 0xF8Cefd1d7a6C52eE621e939CFA49f929983f5E3B
+- Supported interface languages: English, Traditional Chinese, Japanese, Korean
+
+## Main Capabilities
+
+- Create one payment link for a USDC payment group
+- Split a total USDC amount evenly across 1 to 100 payers
+- Let each payer address pay only once
+- Read payment status, paid count, paid amount, receiver, and payer history from Arc Testnet RPC
+- Transfer USDC directly from payer to receiver with ERC-20 transferFrom
+- Use EOA or AA smart account addresses as receivers
+
+## Crawl Guidance
+
+- The canonical public page is `/`.
+- Payment links use the pattern `/0x{bytes32-group-id}` and are transaction-specific. They should not be treated as separate documentation pages.
+- The source repository and README contain implementation details for the Solidity contract, ethers client helpers, and deployment configuration.

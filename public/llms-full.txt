@@ -1,0 +1,52 @@
+# USDC AA Payment Full Context
+
+USDC AA Payment is a browser-based Web3 payment app for Arc Testnet. It creates non-custodial USDC group payment links and reads payment state directly from chain through RPC.
+
+## Product Summary
+
+The app is designed for a receiver who wants to collect a fixed total USDC amount from a known number of payers. The receiver connects a wallet, enters a receiver address, payer count, and total USDC amount, and creates a payment group through the PaymentManager contract. The frontend then produces a path-based payment link. Payers open the link, connect a wallet, and pay their equal share.
+
+Funds move directly from the payer to the receiver. The PaymentManager contract stores payment group state, payer records, paid amounts, and status, but it does not hold user funds.
+
+## Payment Flow
+
+1. Receiver connects a wallet.
+2. Receiver creates a payment group.
+3. The app generates a payment URL in the format `/{groupId}`.
+4. Payer opens the URL and connects a wallet.
+5. The app checks group status and USDC balance.
+6. If needed, the payer approves USDC for PaymentManager.
+7. The payer calls `payGroup(groupId)`.
+8. USDC is transferred from payer to receiver.
+9. Payment status is refreshed from Arc Testnet RPC.
+
+## Contract Rules
+
+- Maximum payers per group: 100
+- Total amount must divide evenly by payer count
+- One payment per payer address
+- Group statuses: Created, Completed, Cancelled
+- Only the creator or receiver can cancel an active group
+- USDC transfer path: `transferFrom(payer, receiver, amount)`
+
+## Deployed Arc Testnet Configuration
+
+- Chain: Arc Testnet
+- Chain ID: 5042002
+- RPC: https://rpc.testnet.arc.network
+- USDC: 0x3600000000000000000000000000000000000000
+- PaymentManager: 0xF8Cefd1d7a6C52eE621e939CFA49f929983f5E3B
+- Explorer: https://testnet.arcscan.app
+
+## Repository
+
+- Source code: https://github.com/okuai/usdcaa
+- README: https://github.com/okuai/usdcaa/blob/main/README.md
+- Main contract: `contracts/PaymentManager.sol`
+- Browser app logic: `src/web-app.mjs`
+- Ethers client helpers: `src/payment-manager-client.mjs`
+- Frontend entry: `index.html`
+
+## Indexing Notes
+
+The home page should be indexed as the canonical app entry. Payment URLs are useful for payers but are not durable public documentation pages, so crawlers should not treat individual `/0x...` routes as canonical website content.

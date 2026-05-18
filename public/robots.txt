@@ -1,0 +1,30 @@
+# Update the absolute sitemap URL if the production domain is not usdcaa.com.
+User-agent: *
+Allow: /
+Disallow: /0x
+
+User-agent: GPTBot
+Allow: /
+Disallow: /0x
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /0x
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /0x
+
+User-agent: Claude-User
+Allow: /
+Disallow: /0x
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /0x
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /0x
+
+Sitemap: https://usdcaa.com/sitemap.xml

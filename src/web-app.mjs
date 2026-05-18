@@ -32,13 +32,29 @@ const LOGIN_STORAGE_KEY = "arcaa.walletLogin";
 const LOGOUT_STORAGE_KEY = "arcaa.walletLoggedOut";
 const LANGUAGE_STORAGE_KEY = "arcaa.language";
 const SUPPORTED_LANGUAGES = ["en", "zh-Hant", "ja", "ko"];
+const SEO_LOCALES = Object.freeze({
+  en: "en_US",
+  "zh-Hant": "zh_TW",
+  ja: "ja_JP",
+  ko: "ko_KR"
+});
+const SEO_KEYWORDS = Object.freeze([
+  "USDC",
+  "Arc Testnet",
+  "account abstraction",
+  "AA wallet",
+  "payment link",
+  "group payment",
+  "non-custodial"
+]);
 const IP_LANGUAGE_ENDPOINT = "https://ipwho.is/";
 const provider = getProvider(ARC_RPC_URL);
 
 const translations = {
   en: {
     appTitle: "USDC AA Payment",
-    docTitle: "Arc USDC AA Payment",
+    docTitle: "USDC AA Payment | Arc Testnet Payment Links",
+    metaDescription: "Create non-custodial USDC group payment links on Arc Testnet for EOA and AA wallet receivers. Payers connect a wallet, approve USDC, and pay their equal share on-chain.",
     createPaymentTitle: "Create Payment",
     receiverDefault: "Receiver defaults to wallet address",
     receiverAddress: "Receiver address",
@@ -107,7 +123,8 @@ const translations = {
   },
   "zh-Hant": {
     appTitle: "USDC AA收款",
-    docTitle: "Arc USDC AA收款",
+    docTitle: "USDC AA收款 | Arc 測試網付款連結",
+    metaDescription: "在 Arc 測試網建立非託管 USDC 群組收款連結，支援 EOA 與 AA 智慧帳戶收款地址，付款人連接錢包後按比例鏈上支付。",
     createPaymentTitle: "建立收款",
     receiverDefault: "收款地址預設使用錢包地址",
     receiverAddress: "收款地址",
@@ -176,7 +193,8 @@ const translations = {
   },
   ja: {
     appTitle: "USDC AA 受取",
-    docTitle: "Arc USDC AA 受取",
+    docTitle: "USDC AA 受取 | Arc テストネット支払いリンク",
+    metaDescription: "Arc テストネットで非カストディアルな USDC グループ支払いリンクを作成します。EOA と AA スマートアカウントの受取アドレスに対応し、支払者はウォレット接続後にオンチェーンで均等額を支払います。",
     createPaymentTitle: "受取を作成",
     receiverDefault: "受取アドレスはウォレットアドレスを既定で使用",
     receiverAddress: "受取アドレス",
@@ -245,7 +263,8 @@ const translations = {
   },
   ko: {
     appTitle: "USDC AA 수금",
-    docTitle: "Arc USDC AA 수금",
+    docTitle: "USDC AA 수금 | Arc 테스트넷 결제 링크",
+    metaDescription: "Arc 테스트넷에서 비수탁 USDC 그룹 결제 링크를 만듭니다. EOA와 AA 스마트 계정 수금 주소를 지원하며, 결제자는 지갑을 연결한 뒤 온체인에서 균등 금액을 결제합니다.",
     createPaymentTitle: "수금 만들기",
     receiverDefault: "수금 주소는 기본적으로 지갑 주소를 사용합니다",
     receiverAddress: "수금 주소",
@@ -392,9 +411,114 @@ function syncQueryLabel() {
   elements.queryGroupLabelText.textContent = showsReceiver ? t("receiverAddress") : t("id");
 }
 
+function getPathId() {
+  try {
+    return decodeURIComponent(window.location.pathname.replace(/^\/+|\/+$/g, ""));
+  } catch {
+    return "";
+  }
+}
+
+function isNonCanonicalRoute() {
+  return getPathId() !== "";
+}
+
+function getSiteRootUrl() {
+  return new URL("/", window.location.href).toString();
+}
+
+function setMetaContent(selector, content) {
+  const element = document.querySelector(selector);
+  if (element) {
+    element.setAttribute("content", content);
+  }
+}
+
+function buildStructuredData(rootUrl) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "@id": `${rootUrl}#webapp`,
+    name: t("appTitle"),
+    alternateName: ["Arc USDC AA Payment", "USDC AA Payment"],
+    url: rootUrl,
+    description: t("metaDescription"),
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Any",
+    browserRequirements: "Requires a Web3 wallet such as MetaMask or Rabby for on-chain payment actions.",
+    inLanguage: SUPPORTED_LANGUAGES,
+    isAccessibleForFree: true,
+    softwareVersion: "0.1.0",
+    creator: {
+      "@type": "Organization",
+      name: "okuai",
+      url: "https://github.com/okuai"
+    },
+    sameAs: ["https://github.com/okuai/usdcaa"],
+    keywords: SEO_KEYWORDS.join(", "),
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD"
+    },
+    featureList: [
+      "Create one USDC payment link for a payment group",
+      "Split a total USDC amount evenly across payers",
+      "Read payment status from Arc Testnet RPC",
+      "Transfer USDC directly from payer to receiver without custody",
+      "Support EOA and AA smart account receiver addresses"
+    ],
+    about: [
+      {
+        "@type": "Thing",
+        name: "Arc Testnet"
+      },
+      {
+        "@type": "Thing",
+        name: "USDC"
+      },
+      {
+        "@type": "Thing",
+        name: "Account abstraction"
+      }
+    ]
+  };
+}
+
+function syncSeoMetadata() {
+  const rootUrl = getSiteRootUrl();
+  const title = t("docTitle");
+  const description = t("metaDescription");
+  const robotsContent = isNonCanonicalRoute()
+    ? "noindex, nofollow"
+    : "index, follow, max-image-preview:large";
+
+  document.title = title;
+  setMetaContent("#metaDescription", description);
+  setMetaContent("#robotsMeta", robotsContent);
+  setMetaContent("#googlebotMeta", robotsContent);
+  setMetaContent("#bingbotMeta", robotsContent);
+  setMetaContent("#ogTitle", title);
+  setMetaContent("#ogDescription", description);
+  setMetaContent("#ogUrl", rootUrl);
+  setMetaContent("#ogLocale", SEO_LOCALES[currentLanguage] ?? SEO_LOCALES.en);
+  setMetaContent("#twitterTitle", title);
+  setMetaContent("#twitterDescription", description);
+
+  const canonicalUrl = document.querySelector("#canonicalUrl");
+  if (canonicalUrl) {
+    canonicalUrl.href = rootUrl;
+  }
+
+  const structuredData = document.querySelector("#structuredData");
+  if (structuredData) {
+    structuredData.textContent = JSON.stringify(buildStructuredData(rootUrl), null, 2);
+  }
+}
+
 function applyStaticTranslations() {
   document.documentElement.lang = currentLanguage;
-  document.title = t("docTitle");
+  syncSeoMetadata();
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     node.textContent = t(node.dataset.i18n);
   });
@@ -970,7 +1094,7 @@ async function handleCopyPaymentLink() {
 }
 
 async function hydrateFromUrl() {
-  const pathId = decodeURIComponent(window.location.pathname.replace(/^\/+|\/+$/g, ""));
+  const pathId = getPathId();
   const groupId = ethers.isHexString(pathId, 32) ? pathId : undefined;
 
   if (!groupId) return;
@@ -982,6 +1106,7 @@ async function hydrateFromUrl() {
     window.history.replaceState({}, "", elements.paymentLink.value);
   }
   document.body.dataset.mode = "pay";
+  syncSeoMetadata();
 
   await queryGroup(groupId);
   setMessageKey("linkLoaded", {}, "success");
